@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>好食菜單 — 活潑日系</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Zen+Maru+Gothic:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background:#fffde7;
+  min-height:100vh;
+  padding:0 0 80px;
+  font-family:'Zen Maru Gothic','Noto Sans TC',sans-serif;
+}
+.a-header {
+  background:#4caf50;
+  padding:24px 20px 20px;
+  color:white;
+  position:relative;
+  overflow:hidden;
+}
+.a-header::before {
+  content:''; position:absolute; right:-30px; top:-30px;
+  width:140px; height:140px; background:rgba(255,255,255,.12); border-radius:50%;
+}
+.a-header::after {
+  content:''; position:absolute; right:30px; bottom:-20px;
+  width:80px; height:80px; background:rgba(255,255,255,.08); border-radius:50%;
+}
+.a-logo { font-size:28px; font-weight:700; letter-spacing:.1em; position:relative; }
+.a-logo span { color:#fff176; }
+.a-sub { font-size:12px; opacity:.85; margin-top:4px; letter-spacing:.08em; }
+.a-info { margin-top:12px; font-size:12px; opacity:.9; display:flex; flex-wrap:wrap; gap:8px 20px; }
+.a-notice {
+  background:#f9a825; color:#4e2800;
+  padding:8px 20px; font-size:12px; font-weight:500;
+  text-align:center; letter-spacing:.04em;
+}
+.a-section { padding:20px 16px 0; }
+.a-section-title {
+  display:inline-flex; align-items:center; gap:8px;
+  background:#4caf50; color:white;
+  padding:6px 16px 6px 12px; border-radius:20px;
+  font-size:14px; font-weight:700; margin-bottom:14px;
+  box-shadow:0 2px 8px rgba(76,175,80,.3);
+}
+.a-section-sub { font-size:11px; color:#81c784; margin-left:4px; }
+.a-card {
+  background:white; border-radius:16px;
+  padding:14px 16px; margin-bottom:10px;
+  box-shadow:0 2px 10px rgba(0,0,0,.06);
+  border:1.5px solid #e8f5e9;
+}
+.a-item-grid {
+  display:grid;
+  grid-template-columns:1fr repeat(4,60px);
+  gap:4px 8px; font-size:12px;
+}
+.a-col-head {
+  text-align:center; color:white;
+  background:#66bb6a; border-radius:8px;
+  padding:5px 2px; font-size:10px; font-weight:700; line-height:1.3;
+}
+.a-col-head.yellow { background:#f9a825; }
+.a-col-head.teal { background:#26a69a; }
+.a-row { display:contents; }
+.a-row > div { display:flex; align-items:center; padding:7px 4px; border-bottom:1px dashed #e8f5e9; }
+.a-row:last-child > div { border-bottom:none; }
+.a-item-name { font-size:13px; font-weight:500; color:#2e7d32; }
+.a-price { justify-content:center; color:#e65100; font-weight:700; font-size:12px; }
+.a-check-box {
+  width:20px; height:20px; border:2px solid #aed581;
+  border-radius:5px; cursor:pointer; transition:all .15s;
+  display:flex; align-items:center; justify-content:center;
+}
+.a-check-box.checked { background:#4caf50; border-color:#4caf50; }
+.a-check-box.checked::after { content:'✓'; color:white; font-size:12px; font-weight:700; }
+.a-addon-row {
+  display:flex; gap:8px; flex-wrap:wrap; padding:10px 0 4px;
+  border-top:1px dashed #c8e6c9; margin-top:6px;
+}
+.a-addon {
+  background:#f1f8e9; border:1.5px solid #aed581;
+  border-radius:12px; padding:6px 12px;
+  font-size:12px; color:#33691e; cursor:pointer;
+  transition:all .15s; display:flex; align-items:center; gap:6px;
+}
+.a-addon.checked { background:#4caf50; color:white; border-color:#4caf50; }
+.a-addon-price { font-weight:700; }
+.a-drinks { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; padding:4px 0; }
+.a-drink-item {
+  background:#f9fbe7; border:1px solid #dce775;
+  border-radius:10px; padding:8px 10px;
+  display:flex; justify-content:space-between; align-items:center;
+  font-size:12px; cursor:pointer;
+}
+.a-drink-item.checked { background:#f9a825; border-color:#f9a825; color:white; }
+.a-drink-item.checked .a-drink-price { color:white; }
+.a-drink-name { font-weight:500; color:#33691e; }
+.a-drink-price { color:#e65100; font-weight:700; }
+.a-cart-bar {
+  position:fixed; bottom:0; left:0; right:0;
+  background:#4caf50; color:white;
+  padding:14px 20px;
+  display:flex; justify-content:space-between; align-items:center;
+  box-shadow:0 -4px 20px rgba(76,175,80,.3);
+}
+.a-cart-info { font-size:13px; }
+.a-cart-total { font-size:18px; font-weight:700; }
+.a-cart-btn {
+  background:white; color:#2e7d32; border:none;
+  padding:10px 24px; border-radius:20px;
+  font-weight:700; font-size:13px; cursor:pointer; font-family:inherit;
+}
+@media(max-width:600px) {
+  .a-item-grid { grid-template-columns:1fr repeat(4,52px); }
+  .a-drinks { grid-template-columns:repeat(2,1fr); }
+}
+</style>
+</head>
+<body>
+
+<div class="a-header">
+  <div class="a-logo">好<span>食</span> <span style="font-size:14px;color:rgba(255,255,255,.8)">Good Day To Eat</span></div>
+  <div class="a-sub">きちじつうまい ／ 每日好食</div>
+  <div class="a-info">
+    <span>📍 台中市太平區育賢路111號</span>
+    <span>📞 04-2392-8968</span>
+  </div>
+</div>
+
+<div class="a-notice">均附小菜、味噌豆腐湯 ✦ 每人低消一份主食</div>
+
+<div class="a-section">
+  <div class="a-section-title">🍛 主食 <span class="a-section-sub">均附小菜 + 味噌豆腐湯</span></div>
+  <div class="a-card">
+    <div class="a-item-grid">
+      <div></div>
+      <div class="a-col-head">五蔬果<br>咖哩</div>
+      <div class="a-col-head">吉日<br>咖哩</div>
+      <div class="a-col-head yellow">丼飯</div>
+      <div class="a-col-head teal">泡菜<br>丼飯</div>
+    </div>
+    <div id="mainItems"></div>
+  </div>
+</div>
+
+<div class="a-section">
+  <div class="a-section-title">✨ 加料升級</div>
+  <div class="a-card"><div class="a-addon-row" id="addonRow"></div></div>
+</div>
+
+<div class="a-section">
+  <div class="a-section-title">🥩 定食</div>
+  <div class="a-card"><div id="teishokuItems"></div></div>
+</div>
+
+<div class="a-section">
+  <div class="a-section-title">🍜 麵食</div>
+  <div class="a-card"><div id="noodleItems"></div></div>
+</div>
+
+<div class="a-section">
+  <div class="a-section-title">🍗 點心頸</div>
+  <div class="a-card"><div id="snackItems"></div></div>
+</div>
+
+<div class="a-section">
+  <div class="a-section-title">🧋 飲品</div>
+  <div class="a-card"><div class="a-drinks" id="drinkItems"></div></div>
+</div>
+
+<div class="a-cart-bar">
+  <div>
+    <div class="a-cart-info" id="aCartInfo">尚未點餐</div>
+    <div class="a-cart-total" id="aCartTotal">$0</div>
+  </div>
+  <button class="a-cart-btn" onclick="submit()">送出點單 →</button>
+</div>
+
+<script>
+const MAIN_ITEMS = [
+  {n:'深海軟殼蟹', prices:{curry5:255,curryJ:265,don:null,kimchi:null}},
+  {n:'日式海老炸蝦', prices:{curry5:240,curryJ:250,don:190,kimchi:225}},
+  {n:'厚切豬里肌', prices:{curry5:230,curryJ:240,don:180,kimchi:215}},
+  {n:'鹽麴厚切雞', prices:{curry5:220,curryJ:230,don:160,kimchi:195}},
+  {n:'炙燒牛五花', prices:{curry5:220,curryJ:230,don:160,kimchi:195}},
+  {n:'炙燒梅花豬', prices:{curry5:210,curryJ:210,don:150,kimchi:185}},
+  {n:'吉日唐揚雞', prices:{curry5:190,curryJ:200,don:150,kimchi:185}},
+];
+const ADDONS = [
+  {n:'歐姆蛋', p:30},{n:'炙燒起司', p:30},
+  {n:'胡麻豆腐＋飲品40', p:59, label:'A套'},
+  {n:'北海道南瓜可樂餅＋飲品40', p:79, label:'B套'},
+  {n:'洋蔥圈＋飲品40', p:89, label:'C套'},
+];
+const TEISHOKU = [
+  {n:'五花牛定食', note:'柚香／胡麻', p:150},
+  {n:'梅花豬定食', note:'柚香／胡麻', p:150},
+  {n:'打拋豬（辣）', p:150},
+];
+const NOODLES = [
+  {n:'胡麻烏龍涼麵', p:99},
+  {n:'咖哩烏龍麵（湯）', p:150},
+];
+const SNACKS = [
+  {n:'厚切里肌豬排',p:130},{n:'鹽麴厚切雞排',p:120},{n:'炙燒五花牛',p:120},
+  {n:'炙燒梅花豬',p:110},{n:'日式唐揚蟹',p:100},{n:'吉日唐揚雞',p:90},
+  {n:'五蔬果咖哩醬',p:50},{n:'吉日咖哩醬',p:60},{n:'一等牧野池上米',p:35},
+  {n:'北海道南瓜可樂餅',p:60},{n:'乳酪條 3條',p:65},{n:'洋蔥圈 6個',p:65},
+  {n:'柴魚佐胡麻豆腐',p:45},{n:'炙燒蔬菜',p:40},{n:'味噌豆腐湯',p:35},
+  {n:'日式溏心蛋',p:30},{n:'泡菜',p:50},
+];
+const DRINKS = [
+  {n:'吉日手作奶茶',p:60,tag:'經典'},{n:'冷泡茶系列',p:50},
+  {n:'可爾必思',p:40},{n:'氣泡飲',p:40},{n:'可樂',p:40},{n:'雪碧',p:40},
+];
+
+const state = { main:{}, addons:new Set(), checks:{}, drinks:new Set() };
+
+function build() {
+  document.getElementById('mainItems').innerHTML = MAIN_ITEMS.map((item,i) => `
+    <div class="a-item-grid">
+      <div class="a-row"><div class="a-item-name">${item.n}</div></div>
+      ${['curry5','curryJ','don','kimchi'].map(k => `
+        <div class="a-row">
+          ${item.prices[k]
+            ? `<div class="a-price" style="cursor:pointer;padding:4px;border-radius:6px" onclick="pickMain(${i},'${k}')" id="ap-${i}-${k}">$${item.prices[k]}</div>`
+            : `<div class="a-price" style="color:#ddd;font-size:18px;justify-content:center">—</div>`}
+        </div>`).join('')}
+    </div>`).join('');
+
+  document.getElementById('addonRow').innerHTML = ADDONS.map((a,i) => `
+    <div class="a-addon" id="addon-${i}" onclick="toggleAddon(${i})">
+      ${a.label?`<span style="background:#f9a825;color:#fff;padding:1px 6px;border-radius:8px;font-size:10px">${a.label}</span>`:''}
+      ${a.n}<span class="a-addon-price">+$${a.p}</span>
+    </div>`).join('');
+
+  document.getElementById('teishokuItems').innerHTML = TEISHOKU.map((t,i) => `
+    <div style="display:flex;align-items:center;padding:10px 0;border-bottom:1px dashed #e8f5e9;gap:10px;">
+      <div style="flex:1;font-size:13px;font-weight:500;color:#2e7d32">${t.n}${t.note?`<span style="font-size:10px;color:#888;margin-left:6px">${t.note}</span>`:''}</div>
+      <span style="color:#e65100;font-weight:700">$${t.p}</span>
+      <div class="a-check-box" onclick="toggleCheck('t${i}',${t.p},this)"></div>
+    </div>`).join('');
+
+  document.getElementById('noodleItems').innerHTML = NOODLES.map((n,i) => `
+    <div style="display:flex;align-items:center;padding:10px 0;border-bottom:1px dashed #e8f5e9;gap:10px;">
+      <div style="flex:1;font-size:13px;font-weight:500;color:#2e7d32">${n.n}</div>
+      <span style="color:#e65100;font-weight:700">$${n.p}</span>
+      <div class="a-check-box" onclick="toggleCheck('n${i}',${n.p},this)"></div>
+    </div>`).join('');
+
+  document.getElementById('snackItems').innerHTML = SNACKS.map((s,i) => `
+    <div style="display:flex;align-items:center;padding:10px 0;border-bottom:1px dashed #e8f5e9;gap:10px;">
+      <div style="flex:1;font-size:13px;color:#2e7d32">${s.n}</div>
+      <span style="color:#e65100;font-weight:700">$${s.p}</span>
+      <div class="a-check-box" onclick="toggleCheck('s${i}',${s.p},this)"></div>
+    </div>`).join('');
+
+  document.getElementById('drinkItems').innerHTML = DRINKS.map((d,i) => `
+    <div class="a-drink-item" id="drink-${i}" onclick="toggleDrink(${i})">
+      <span class="a-drink-name">${d.n}${d.tag?`<span style="background:#f9a825;color:#fff;font-size:9px;padding:1px 5px;border-radius:8px;margin-left:4px">${d.tag}</span>`:''}</span>
+      <span class="a-drink-price">$${d.p}</span>
+    </div>`).join('');
+}
+
+function pickMain(i,col) {
+  const key = `m${i}`;
+  const same = state.main[key] && state.main[key].col === col;
+  if (same) delete state.main[key]; else state.main[key] = {col, price: MAIN_ITEMS[i].prices[col]};
+  ['curry5','curryJ','don','kimchi'].forEach(k => {
+    const el = document.getElementById(`ap-${i}-${k}`);
+    if (!el) return;
+    const on = !same && k === col;
+    el.style.background = on ? '#4caf50' : '';
+    el.style.color = on ? 'white' : '';
+  });
+  updateTotal();
+}
+function toggleAddon(i) {
+  const el = document.getElementById(`addon-${i}`);
+  state.addons.has(i) ? (state.addons.delete(i), el.classList.remove('checked')) : (state.addons.add(i), el.classList.add('checked'));
+  updateTotal();
+}
+function toggleCheck(key, price, el) {
+  if (el.classList.contains('checked')) { el.classList.remove('checked'); delete state.checks[key]; }
+  else { el.classList.add('checked'); state.checks[key] = price; }
+  updateTotal();
+}
+function toggleDrink(i) {
+  const el = document.getElementById(`drink-${i}`);
+  state.drinks.has(i) ? (state.drinks.delete(i), el.classList.remove('checked')) : (state.drinks.add(i), el.classList.add('checked'));
+  updateTotal();
+}
+function updateTotal() {
+  let total = 0, count = 0;
+  Object.values(state.main).forEach(v => { total += v.price; count++; });
+  state.addons.forEach(i => { total += ADDONS[i].p; count++; });
+  Object.values(state.checks).forEach(p => { total += p; count++; });
+  state.drinks.forEach(i => { total += DRINKS[i].p; count++; });
+  document.getElementById('aCartInfo').textContent = count > 0 ? `已選 ${count} 項` : '尚未點餐';
+  document.getElementById('aCartTotal').textContent = `$${total.toLocaleString()}`;
+}
+function submit() {
+  alert(`✅ 點單已送出！\n訂單編號：#${Math.floor(Math.random()*900)+100}\n廚房收到後會盡快準備，謝謝！`);
+}
+build();
+</script>
+</body>
+</html>

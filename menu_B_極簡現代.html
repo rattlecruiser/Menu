@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>好食菜單 — 極簡現代</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500&family=Noto+Serif+TC:wght@400;600&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#fafafa; min-height:100vh; padding-bottom:80px; font-family:'Noto Sans TC',sans-serif; font-weight:300; }
+.b-header { background:#111; color:white; padding:32px 24px 28px; }
+.b-header-top { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:16px; }
+.b-logo { font-family:'Noto Serif TC',serif; font-size:32px; font-weight:600; letter-spacing:.15em; }
+.b-logo-en { font-size:11px; color:#888; letter-spacing:.3em; margin-top:4px; text-transform:uppercase; }
+.b-badge { background:#c9a84c; color:#111; padding:4px 12px; font-size:11px; font-weight:700; letter-spacing:.08em; border-radius:2px; align-self:flex-start; }
+.b-header-info { display:flex; gap:24px; font-size:12px; color:#888; }
+.b-type-bar { background:#1a1a1a; padding:10px 24px; display:flex; gap:10px; border-bottom:1px solid #222; }
+.b-type-btn {
+  background:transparent; border:1px solid #333; color:#888;
+  padding:6px 16px; font-family:inherit; font-size:12px; cursor:pointer;
+  letter-spacing:.08em; transition:all .2s;
+}
+.b-type-btn.active { background:#c9a84c; border-color:#c9a84c; color:#111; font-weight:700; }
+.b-notice { background:#f5f0e8; border-left:3px solid #c9a84c; padding:10px 24px; font-size:12px; color:#555; }
+.b-section { padding:28px 24px 0; }
+.b-section-head {
+  display:flex; align-items:baseline; gap:14px;
+  padding-bottom:10px; border-bottom:1px solid #e0e0e0; margin-bottom:16px;
+}
+.b-section-head h2 { font-size:18px; font-weight:500; letter-spacing:.12em; }
+.b-section-head span { font-size:11px; color:#c9a84c; letter-spacing:.25em; text-transform:uppercase; }
+.b-table { width:100%; border-collapse:collapse; }
+.b-th { text-align:center; font-size:10px; letter-spacing:.12em; color:#888; padding:6px 8px; border-bottom:1px solid #e0e0e0; text-transform:uppercase; }
+.b-th:first-child { text-align:left; }
+.b-tr { border-bottom:.5px solid #f0f0f0; transition:background .15s; }
+.b-tr:hover { background:#fafaf5; }
+.b-td { padding:11px 8px; font-size:13px; vertical-align:middle; color:#222; letter-spacing:.03em; }
+.b-price { text-align:center; color:#222; font-size:13px; cursor:pointer; padding:11px 8px; vertical-align:middle; }
+.b-price.empty { color:#ccc; text-align:center; padding:11px 8px; vertical-align:middle; }
+.b-price.selected { background:#fffbf0; color:#c9a84c; font-weight:700; }
+.b-qty-cell { text-align:center; padding:11px 8px; vertical-align:middle; }
+.b-qty { display:inline-flex; align-items:center; gap:6px; }
+.b-qty-btn {
+  width:22px; height:22px; border:1px solid #ddd; background:transparent;
+  cursor:pointer; font-size:14px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  transition:all .15s; color:#444;
+}
+.b-qty-btn:hover { border-color:#c9a84c; color:#c9a84c; }
+.b-qty-num { font-size:13px; font-weight:500; min-width:16px; text-align:center; }
+.b-extras { display:flex; gap:8px; flex-wrap:wrap; padding:12px 0 4px; }
+.b-extra {
+  border:1px solid #e0e0e0; padding:6px 14px;
+  font-size:12px; color:#555; cursor:pointer;
+  transition:all .15s; letter-spacing:.04em;
+}
+.b-extra:hover, .b-extra.on { border-color:#c9a84c; background:#fffbf0; color:#222; }
+.b-extra .ep { color:#c9a84c; font-weight:500; margin-left:4px; }
+.b-bottom-bar {
+  position:fixed; bottom:0; left:0; right:0;
+  background:#111; color:white;
+  padding:14px 24px;
+  display:flex; justify-content:space-between; align-items:center;
+}
+.b-bottom-label { font-size:11px; color:#888; letter-spacing:.08em; text-transform:uppercase; }
+.b-bottom-total { font-family:'Noto Serif TC',serif; font-size:22px; color:#c9a84c; }
+.b-submit {
+  background:#c9a84c; color:#111; border:none;
+  padding:11px 28px; font-weight:700; font-size:13px;
+  cursor:pointer; letter-spacing:.08em; font-family:inherit; transition:background .2s;
+}
+.b-submit:hover { background:#e0c060; }
+@media(max-width:600px) {
+  .b-section { padding:20px 16px 0; }
+  .b-table { font-size:12px; }
+}
+</style>
+</head>
+<body>
+
+<div class="b-header">
+  <div class="b-header-top">
+    <div>
+      <div class="b-logo">好食</div>
+      <div class="b-logo-en">Good Day To Eat</div>
+    </div>
+    <div class="b-badge">台中．太平</div>
+  </div>
+  <div class="b-header-info">
+    <span>📍 太平區育賢路111號</span>
+    <span>📞 04-2392-8968</span>
+  </div>
+</div>
+<div class="b-type-bar">
+  <button class="b-type-btn active" onclick="setType(this)">內用</button>
+  <button class="b-type-btn" onclick="setType(this)">外帶</button>
+</div>
+<div class="b-notice">所有主食均附小菜一份及味噌豆腐湯</div>
+
+<div class="b-section">
+  <div class="b-section-head"><h2>主　食</h2><span>Main Course</span></div>
+  <table class="b-table">
+    <thead>
+      <tr>
+        <th class="b-th" style="text-align:left">品項</th>
+        <th class="b-th">五蔬果咖哩</th>
+        <th class="b-th">吉日咖哩</th>
+        <th class="b-th">丼飯</th>
+        <th class="b-th">泡菜丼飯</th>
+        <th class="b-th">數量</th>
+      </tr>
+    </thead>
+    <tbody id="bMainBody"></tbody>
+  </table>
+</div>
+
+<div class="b-section">
+  <div class="b-section-head"><h2>加料升級</h2><span>Add-on</span></div>
+  <div class="b-extras" id="bExtras"></div>
+</div>
+
+<div class="b-section">
+  <div class="b-section-head"><h2>點心頸 ＆ 定食 ＆ 飲品</h2><span>Snack & Drinks</span></div>
+  <table class="b-table">
+    <thead>
+      <tr>
+        <th class="b-th" style="text-align:left">品項</th>
+        <th class="b-th">單價</th>
+        <th class="b-th">數量</th>
+      </tr>
+    </thead>
+    <tbody id="bSnackBody"></tbody>
+  </table>
+</div>
+
+<div class="b-bottom-bar">
+  <div>
+    <div class="b-bottom-label">合計金額</div>
+    <div class="b-bottom-total" id="bTotal">$0</div>
+  </div>
+  <button class="b-submit" onclick="submit()">確認送出</button>
+</div>
+
+<script>
+const MAIN = [
+  {n:'深海軟殼蟹', p:{c5:255,cj:265,d:null,k:null}},
+  {n:'日式海老炸蝦', p:{c5:240,cj:250,d:190,k:225}},
+  {n:'厚切豬里肌', p:{c5:230,cj:240,d:180,k:215}},
+  {n:'鹽麴厚切雞', p:{c5:220,cj:230,d:160,k:195}},
+  {n:'炙燒牛五花', p:{c5:220,cj:230,d:160,k:195}},
+  {n:'炙燒梅花豬', p:{c5:210,cj:210,d:150,k:185}},
+  {n:'吉日唐揚雞', p:{c5:190,cj:200,d:150,k:185}},
+];
+const ADDONS = [
+  {n:'歐姆蛋',p:30},{n:'炙燒起司',p:30},
+  {n:'[A套] 胡麻豆腐＋飲品40',p:59},
+  {n:'[B套] 南瓜可樂餅＋飲品40',p:79},
+  {n:'[C套] 洋蔥圈＋飲品40',p:89},
+];
+const OTHERS = [
+  {n:'五花牛定食（柚香／胡麻）',p:150},{n:'梅花豬定食（柚香／胡麻）',p:150},
+  {n:'打拋豬（辣）定食',p:150},{n:'胡麻烏龍涼麵',p:99},{n:'咖哩烏龍麵（湯）',p:150},
+  {n:'厚切里肌豬排',p:130},{n:'鹽麴厚切雞排',p:120},{n:'炙燒五花牛',p:120},
+  {n:'炙燒梅花豬',p:110},{n:'日式唐揚蟹',p:100},{n:'吉日唐揚雞',p:90},
+  {n:'五蔬果咖哩醬',p:50},{n:'吉日咖哩醬',p:60},{n:'一等牧野池上米',p:35},
+  {n:'北海道南瓜可樂餅',p:60},{n:'乳酪條 3條',p:65},{n:'洋蔥圈 6個',p:65},
+  {n:'柴魚佐胡麻豆腐',p:45},{n:'炙燒蔬菜',p:40},{n:'味噌豆腐湯',p:35},
+  {n:'日式溏心蛋',p:30},{n:'泡菜',p:50},
+  {n:'吉日手作奶茶 ★',p:60},{n:'冷泡茶系列',p:50},
+  {n:'可爾必思',p:40},{n:'氣泡飲',p:40},{n:'可樂',p:40},{n:'雪碧',p:40},
+];
+
+const mainSel = {};
+const mainQty = {};
+const extSel = new Set();
+const otherQty = {};
+
+function build() {
+  const cols = ['c5','cj','d','k'];
+  document.getElementById('bMainBody').innerHTML = MAIN.map((item,i) => `
+    <tr>
+      <td class="b-td">${item.n}</td>
+      ${cols.map(k => item.p[k]
+        ? `<td class="b-price" id="bp-${i}-${k}" onclick="pick(${i},'${k}')">$${item.p[k]}</td>`
+        : `<td class="b-price empty">—</td>`
+      ).join('')}
+      <td class="b-qty-cell">
+        <div class="b-qty">
+          <button class="b-qty-btn" onclick="chgMain(${i},-1)">−</button>
+          <span class="b-qty-num" id="bq-${i}">0</span>
+          <button class="b-qty-btn" onclick="chgMain(${i},1)">+</button>
+        </div>
+      </td>
+    </tr>`).join('');
+
+  document.getElementById('bExtras').innerHTML = ADDONS.map((a,i) => `
+    <div class="b-extra" id="ext-${i}" onclick="toggleExt(${i})">${a.n}<span class="ep">+$${a.p}</span></div>`).join('');
+
+  document.getElementById('bSnackBody').innerHTML = OTHERS.map((o,i) => `
+    <tr>
+      <td class="b-td">${o.n}</td>
+      <td class="b-price">$${o.p}</td>
+      <td class="b-qty-cell">
+        <div class="b-qty">
+          <button class="b-qty-btn" onclick="chgOther(${i},-1)">−</button>
+          <span class="b-qty-num" id="oq-${i}">0</span>
+          <button class="b-qty-btn" onclick="chgOther(${i},1)">+</button>
+        </div>
+      </td>
+    </tr>`).join('');
+}
+
+function pick(i,col) {
+  const same = mainSel[i] === col;
+  mainSel[i] = same ? null : col;
+  ['c5','cj','d','k'].forEach(k => {
+    const el = document.getElementById(`bp-${i}-${k}`);
+    if (el) el.classList.toggle('selected', !same && k === col);
+  });
+  if (!mainQty[i] && !same) { mainQty[i]=1; document.getElementById(`bq-${i}`).textContent=1; }
+  updateTotal();
+}
+function chgMain(i,d) {
+  mainQty[i] = Math.max(0,(mainQty[i]||0)+d);
+  document.getElementById(`bq-${i}`).textContent = mainQty[i];
+  updateTotal();
+}
+function toggleExt(i) {
+  const el = document.getElementById(`ext-${i}`);
+  extSel.has(i) ? (extSel.delete(i), el.classList.remove('on')) : (extSel.add(i), el.classList.add('on'));
+  updateTotal();
+}
+function chgOther(i,d) {
+  otherQty[i] = Math.max(0,(otherQty[i]||0)+d);
+  document.getElementById(`oq-${i}`).textContent = otherQty[i];
+  updateTotal();
+}
+function setType(btn) {
+  document.querySelectorAll('.b-type-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+function updateTotal() {
+  let t = 0;
+  Object.entries(mainQty).forEach(([i,q]) => {
+    const col = mainSel[i];
+    if (col && q > 0) t += MAIN[i].p[col] * q;
+  });
+  extSel.forEach(i => t += ADDONS[i].p);
+  Object.entries(otherQty).forEach(([i,q]) => { if (q>0) t += OTHERS[i].p * q; });
+  document.getElementById('bTotal').textContent = `$${t.toLocaleString()}`;
+}
+function submit() {
+  alert(`✅ 點單已送出！\n訂單編號：#${Math.floor(Math.random()*900)+100}\n廚房收到後會盡快準備，謝謝！`);
+}
+build();
+</script>
+</body>
+</html>

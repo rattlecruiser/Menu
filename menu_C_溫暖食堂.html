@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>好食菜單 — 溫暖食堂</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500&family=Noto+Serif+TC:wght@400;600&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#fdf6e3; min-height:100vh; padding-bottom:80px; font-family:'Noto Sans TC',sans-serif; font-weight:300; }
+.c-header {
+  background:#c0392b; color:#fdf6e3;
+  text-align:center; padding:24px 20px;
+  border-bottom:4px solid #922b21;
+}
+.c-logo { font-family:'Noto Serif TC',serif; font-size:36px; font-weight:600; letter-spacing:.25em; }
+.c-logo-jp { font-size:13px; letter-spacing:.15em; opacity:.8; margin-top:4px; }
+.c-divider { display:flex; align-items:center; gap:10px; justify-content:center; margin:12px 0 8px; }
+.c-divider span { height:1px; width:60px; background:rgba(255,255,255,.4); }
+.c-divider i { color:#f9ca24; font-size:14px; font-style:normal; }
+.c-header-info { font-size:12px; opacity:.85; line-height:2; }
+.c-notice { background:#f39c12; color:#fff; padding:9px 16px; text-align:center; font-size:12px; font-weight:500; letter-spacing:.04em; }
+.c-section { padding:20px 16px 0; }
+.c-title {
+  font-family:'Noto Serif TC',serif; font-size:17px; font-weight:600;
+  color:#c0392b; letter-spacing:.12em;
+  padding-bottom:8px; border-bottom:2px solid #c0392b; margin-bottom:14px;
+  display:flex; align-items:center; gap:10px;
+}
+.c-title::before { content:''; width:4px; height:18px; background:#c0392b; border-radius:2px; }
+.c-block { background:white; border:1px solid #e8d5b0; border-radius:8px; overflow:hidden; margin-bottom:10px; }
+.c-block-head { background:#fef9ee; padding:10px 14px; font-size:11px; color:#795548; letter-spacing:.08em; border-bottom:1px solid #e8d5b0; }
+.c-item { display:flex; align-items:center; padding:10px 14px; border-bottom:1px solid #f5ead0; gap:8px; }
+.c-item:last-child { border-bottom:none; }
+.c-name { flex:1; font-size:14px; color:#3e2723; font-weight:500; }
+.c-tag { background:#fce4ec; color:#c62828; font-size:10px; padding:1px 6px; border-radius:10px; margin-left:6px; font-weight:400; }
+.c-prices { display:flex; gap:6px; flex-wrap:wrap; }
+.c-pill {
+  background:#fef9ee; border:1px solid #e8d5b0;
+  border-radius:12px; padding:4px 10px;
+  font-size:12px; color:#bf360c; font-weight:700;
+  cursor:pointer; transition:all .15s; text-align:center; min-width:52px;
+}
+.c-pill small { display:block; font-size:9px; font-weight:400; color:#888; line-height:1; margin-bottom:1px; }
+.c-pill.on { background:#c0392b; color:white; border-color:#c0392b; }
+.c-pill.on small { color:rgba(255,255,255,.7); }
+.c-qty { display:flex; align-items:center; gap:6px; margin-left:4px; }
+.c-qbtn {
+  width:24px; height:24px; border-radius:50%;
+  border:1.5px solid #e8d5b0; background:transparent;
+  cursor:pointer; font-size:15px; color:#795548;
+  display:flex; align-items:center; justify-content:center; transition:all .15s;
+}
+.c-qbtn:hover { background:#c0392b; color:white; border-color:#c0392b; }
+.c-qnum { font-size:14px; font-weight:500; min-width:18px; text-align:center; }
+.c-addon-wrap { padding:12px 16px; background:#fef9ee; border-top:1px dashed #e8d5b0; }
+.c-addon-label { font-size:11px; color:#795548; margin-bottom:8px; letter-spacing:.08em; }
+.c-addon-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:6px; }
+.c-addon-item {
+  background:white; border:1px solid #e8d5b0; border-radius:6px;
+  padding:8px 10px; display:flex; justify-content:space-between; align-items:center;
+  font-size:12px; cursor:pointer; transition:all .15s;
+}
+.c-addon-item.on { background:#fce4ec; border-color:#ef9a9a; }
+.cn { color:#3e2723; }
+.cp { color:#c62828; font-weight:700; }
+.c-bottom {
+  position:fixed; bottom:0; left:0; right:0;
+  background:#c0392b; padding:12px 20px;
+  display:flex; justify-content:space-between; align-items:center;
+}
+.c-bottom-info { color:rgba(255,255,255,.8); font-size:12px; }
+.c-bottom-total { color:white; font-size:20px; font-weight:700; font-family:'Noto Serif TC',serif; }
+.c-submit {
+  background:white; color:#c0392b; border:none;
+  padding:10px 24px; font-weight:700; font-size:13px;
+  border-radius:4px; cursor:pointer; font-family:inherit; transition:all .2s;
+}
+.c-submit:hover { background:#fce4ec; }
+@media(max-width:480px) {
+  .c-addon-grid { grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="c-header">
+  <div class="c-logo">好　食</div>
+  <div class="c-logo-jp">きちじつうまい</div>
+  <div class="c-divider"><span></span><i>✦</i><span></span></div>
+  <div class="c-header-info">台中市太平區育賢路111號｜04-2392-8968</div>
+</div>
+<div class="c-notice">所有主食均附小菜 + 味噌豆腐湯</div>
+
+<div class="c-section">
+  <div class="c-title">主食</div>
+  <div class="c-block">
+    <div class="c-block-head">點選料理方式選取（可複選多種主食）</div>
+    <div id="cMainItems"></div>
+  </div>
+</div>
+
+<div class="c-section">
+  <div class="c-title">加料升級</div>
+  <div class="c-block">
+    <div class="c-addon-wrap">
+      <div class="c-addon-label">可複選加購項目</div>
+      <div class="c-addon-grid" id="cAddons"></div>
+    </div>
+  </div>
+</div>
+
+<div class="c-section">
+  <div class="c-title">定食 ＆ 麵食</div>
+  <div class="c-block" id="cTeishokuBlock"></div>
+</div>
+
+<div class="c-section">
+  <div class="c-title">點心頸</div>
+  <div class="c-block" id="cSnackBlock"></div>
+</div>
+
+<div class="c-section">
+  <div class="c-title">飲品</div>
+  <div class="c-block" id="cDrinkBlock"></div>
+</div>
+
+<div class="c-bottom">
+  <div>
+    <div class="c-bottom-info" id="cInfo">尚未選擇</div>
+    <div class="c-bottom-total" id="cTotal">$0</div>
+  </div>
+  <button class="c-submit" onclick="submit()">送出點單</button>
+</div>
+
+<script>
+const MAIN = [
+  {n:'深海軟殼蟹', p:{c5:255,cj:265,d:null,k:null}},
+  {n:'日式海老炸蝦', p:{c5:240,cj:250,d:190,k:225}},
+  {n:'厚切豬里肌', p:{c5:230,cj:240,d:180,k:215}},
+  {n:'鹽麴厚切雞', p:{c5:220,cj:230,d:160,k:195}},
+  {n:'炙燒牛五花', p:{c5:220,cj:230,d:160,k:195}},
+  {n:'炙燒梅花豬', p:{c5:210,cj:210,d:150,k:185}},
+  {n:'吉日唐揚雞', p:{c5:190,cj:200,d:150,k:185}},
+];
+const ADDONS = [
+  {n:'歐姆蛋',p:30},{n:'炙燒起司',p:30},
+  {n:'[A套] 胡麻豆腐＋飲品40',p:59},
+  {n:'[B套] 南瓜可樂餅＋飲品40',p:79},
+  {n:'[C套] 洋蔥圈＋飲品40',p:89},
+];
+const TEISHOKU = [
+  {n:'五花牛定食',note:'柚香／胡麻',p:150},
+  {n:'梅花豬定食',note:'柚香／胡麻',p:150},
+  {n:'打拋豬（辣）定食',p:150},
+  {n:'胡麻烏龍涼麵',p:99},
+  {n:'咖哩烏龍麵（湯）',p:150},
+];
+const SNACKS = [
+  {n:'厚切里肌豬排',p:130},{n:'鹽麴厚切雞排',p:120},{n:'炙燒五花牛',p:120},
+  {n:'炙燒梅花豬',p:110},{n:'日式唐揚蟹',p:100},{n:'吉日唐揚雞',p:90},
+  {n:'五蔬果咖哩醬',p:50},{n:'吉日咖哩醬',p:60},{n:'一等牧野池上米',p:35},
+  {n:'北海道南瓜可樂餅',p:60},{n:'乳酪條 3條',p:65},{n:'洋蔥圈 6個',p:65},
+  {n:'柴魚佐胡麻豆腐',p:45},{n:'炙燒蔬菜',p:40},{n:'味噌豆腐湯',p:35},
+  {n:'日式溏心蛋',p:30},{n:'泡菜',p:50},
+];
+const DRINKS = [
+  {n:'吉日手作奶茶',p:60,tag:'經典'},{n:'冷泡茶系列',p:50},
+  {n:'可爾必思',p:40},{n:'氣泡飲',p:40},{n:'可樂',p:40},{n:'雪碧',p:40},
+];
+
+const mainSel = {};
+const addonSel = new Set();
+const teishokuQty = {};
+const snackQty = {};
+const drinkQty = {};
+
+function build() {
+  const labels = {c5:'咖哩',cj:'吉日',d:'丼',k:'泡菜'};
+  document.getElementById('cMainItems').innerHTML = MAIN.map((item,i) => `
+    <div class="c-item">
+      <span class="c-name">${item.n}</span>
+      <div class="c-prices">
+        ${Object.entries(labels).map(([k,lb]) => item.p[k]
+          ? `<div class="c-pill" id="cp-${i}-${k}" onclick="pickMain(${i},'${k}')"><small>${lb}</small>$${item.p[k]}</div>`
+          : '').join('')}
+      </div>
+    </div>`).join('');
+
+  document.getElementById('cAddons').innerHTML = ADDONS.map((a,i) => `
+    <div class="c-addon-item" id="cad-${i}" onclick="toggleAddon(${i})">
+      <span class="cn">${a.n}</span><span class="cp">+$${a.p}</span>
+    </div>`).join('');
+
+  document.getElementById('cTeishokuBlock').innerHTML = TEISHOKU.map((t,i) => `
+    <div class="c-item">
+      <span class="c-name">${t.n}${t.note?`<span class="c-tag">${t.note}</span>`:''}</span>
+      <div class="c-qty">
+        <button class="c-qbtn" onclick="chgTei(${i},-1)">−</button>
+        <span class="c-qnum" id="tq-${i}">0</span>
+        <button class="c-qbtn" onclick="chgTei(${i},1)">+</button>
+      </div>
+      <span style="min-width:48px;text-align:right;color:#bf360c;font-weight:700;font-size:13px;margin-left:4px">$${t.p}</span>
+    </div>`).join('');
+
+  document.getElementById('cSnackBlock').innerHTML = SNACKS.map((s,i) => `
+    <div class="c-item">
+      <span class="c-name">${s.n}</span>
+      <div class="c-qty">
+        <button class="c-qbtn" onclick="chgSnack(${i},-1)">−</button>
+        <span class="c-qnum" id="sq-${i}">0</span>
+        <button class="c-qbtn" onclick="chgSnack(${i},1)">+</button>
+      </div>
+      <span style="min-width:48px;text-align:right;color:#bf360c;font-weight:700;font-size:13px;margin-left:4px">$${s.p}</span>
+    </div>`).join('');
+
+  document.getElementById('cDrinkBlock').innerHTML = DRINKS.map((d,i) => `
+    <div class="c-item">
+      <span class="c-name">${d.n}${d.tag?`<span class="c-tag">${d.tag}</span>`:''}</span>
+      <div class="c-qty">
+        <button class="c-qbtn" onclick="chgDrink(${i},-1)">−</button>
+        <span class="c-qnum" id="dq-${i}">0</span>
+        <button class="c-qbtn" onclick="chgDrink(${i},1)">+</button>
+      </div>
+      <span style="min-width:48px;text-align:right;color:#bf360c;font-weight:700;font-size:13px;margin-left:4px">$${d.p}</span>
+    </div>`).join('');
+}
+
+function pickMain(i,k) {
+  const same = mainSel[i] === k;
+  mainSel[i] = same ? null : k;
+  const labels = {c5:'咖哩',cj:'吉日',d:'丼',k:'泡菜'};
+  Object.keys(labels).forEach(col => {
+    const el = document.getElementById(`cp-${i}-${col}`);
+    if (el) el.classList.toggle('on', !same && col === k);
+  });
+  updateTotal();
+}
+function toggleAddon(i) {
+  const el = document.getElementById(`cad-${i}`);
+  addonSel.has(i) ? (addonSel.delete(i), el.classList.remove('on')) : (addonSel.add(i), el.classList.add('on'));
+  updateTotal();
+}
+function chgTei(i,d) { teishokuQty[i]=Math.max(0,(teishokuQty[i]||0)+d); document.getElementById(`tq-${i}`).textContent=teishokuQty[i]; updateTotal(); }
+function chgSnack(i,d) { snackQty[i]=Math.max(0,(snackQty[i]||0)+d); document.getElementById(`sq-${i}`).textContent=snackQty[i]; updateTotal(); }
+function chgDrink(i,d) { drinkQty[i]=Math.max(0,(drinkQty[i]||0)+d); document.getElementById(`dq-${i}`).textContent=drinkQty[i]; updateTotal(); }
+
+function updateTotal() {
+  let t = 0, c = 0;
+  Object.entries(mainSel).forEach(([i,k]) => { if(k && MAIN[i].p[k]){ t+=MAIN[i].p[k]; c++; } });
+  addonSel.forEach(i => { t+=ADDONS[i].p; c++; });
+  Object.entries(teishokuQty).forEach(([i,q]) => { if(q>0){t+=TEISHOKU[i].p*q; c+=q;} });
+  Object.entries(snackQty).forEach(([i,q]) => { if(q>0){t+=SNACKS[i].p*q; c+=q;} });
+  Object.entries(drinkQty).forEach(([i,q]) => { if(q>0){t+=DRINKS[i].p*q; c+=q;} });
+  document.getElementById('cTotal').textContent = `$${t.toLocaleString()}`;
+  document.getElementById('cInfo').textContent = c > 0 ? `已選 ${c} 項` : '尚未選擇';
+}
+function submit() {
+  alert(`✅ 點單已送出！\n訂單編號：#${Math.floor(Math.random()*900)+100}\n廚房收到後會盡快準備，謝謝！`);
+}
+build();
+</script>
+</body>
+</html>
